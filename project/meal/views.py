@@ -1,12 +1,16 @@
 from django.shortcuts import render
-
+from rest_framework import viewsets
+from .serializers import MealSerializer, RatingSerializer
+from .models import Meal, Rating
 # Create your views here.
 
 #viewset
-from rest_framework import viewsets
-from .serializers import MealRateSerializer
-from .models import MealRate
 
-class MealRateViewSet(viewsets.ModelViewSet):
-    queryset = MealRate.objects.all()
-    serializer_class = MealRateSerializer
+class MealViewSet(viewsets.ModelViewSet):
+    queryset = Meal.objects.all()
+    serializer_class = MealSerializer
+
+
+class RatingViewSet(viewsets.ModelViewSet):
+    queryset = Rating.objects.all()
+    serializer_class = RatingSerializer
