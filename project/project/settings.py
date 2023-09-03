@@ -1,5 +1,7 @@
 from pathlib import Path
-
+from decouple import config
+import os
+from dj_database_url import parse as dburl
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -8,12 +10,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@yw%-hx7b9yf_y2fumwi37#(4t^g(oad!9=a7x8vbjjisiyti$'
-
+# SECRET_KEY = 'django-insecure-@yw%-hx7b9yf_y2fumwi37#(4t^g(oad!9=a7x8vbjjisiyti$'
+SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1','.localhost','mealratermansy.herokuapp.com']
 
 
 # Application definition
@@ -29,6 +31,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_yasg',
+    'corsheaders',
 ]
 
 # REST_FRAMEWORK = {
@@ -42,14 +45,18 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
 ROOT_URLCONF = 'project.urls'
+
 
 TEMPLATES = [
     {
@@ -72,16 +79,23 @@ WSGI_APPLICATION = 'project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+DB_NAME = config('DB_NAME')
+DB_USER = config('DB_USER')
+DB_PASSWORD = config('DB_PASSWORD')
+DB_HOST = config('DB_HOST')
+DB_PORT = config('DB_PORT')
+default_dburl = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mealdb',
-        'USER':'postgres',
-        'PASSWORD':'postgres',
-        'HOST':'localhost',
-        'PORT':'5432',
-    }
+    'default': 
+        config('DATABASE_URL', default=default_dburl, cast=dburl),
+        # 'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': 'mealdb',
+        # 'USER':'postgres',
+        # 'PASSWORD':'postgres',
+        # 'HOST':'localhost',
+        # 'PORT':'5432',
+    
 }
 
 
@@ -120,9 +134,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'statics')
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
