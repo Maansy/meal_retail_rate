@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 
 from .models import Meal, Rating
-
+from django.contrib.auth.models import User
 
 # why we use serializers?
 # serializers are used to convert complex data like querysets and model instances to native python datatypes
@@ -17,4 +17,10 @@ class RatingSerializer(ModelSerializer):
     class Meta:
         model = Rating
         fields = ('id', 'stars', 'user', 'meal')
+
+class UserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'password')
+        extra_kwargs = {'password':{'write_only':True, 'required':True}}
 
