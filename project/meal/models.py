@@ -23,12 +23,17 @@ class Meal(models.Model):
         else:
             return 0
 
+
+    
     def __str__(self):
         return self.title
     
     class Meta:
         verbose_name = 'Meal'
         verbose_name_plural = 'Meals'
+
+
+
 
 class Rating(models.Model):
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE, related_name='ratings')
